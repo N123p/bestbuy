@@ -2,6 +2,8 @@ from typing import List, Tuple
 from products import Product
 
 class Store:
+    """A Store that manages a list of products and facilitates adding, removing, and purchasing products."""
+
     def __init__(self, products: List[Product]):
         """Initialize the Store with a list of Product instances."""
         self.products = products
@@ -28,10 +30,11 @@ class Store:
         Places an order for multiple products and returns the total cost.
 
         Args:
-            shopping_list: A list of tuples with each tuple containing a Product and quantity.
+            shopping_list (List[Tuple[Product, int]]): A list of tuples with each tuple containing
+            a Product instance and the quantity to purchase.
 
         Returns:
-            The total price of the entire order.
+            float: The total price of the entire order.
 
         Raises:
             Exception: If any requested quantity is more than the available stock of that product,
@@ -39,7 +42,12 @@ class Store:
         """
         total_price = 0.0
         for product, quantity in shopping_list:
+            # Check if there's enough quantity
             if quantity > product.get_quantity():
-                raise Exception(f"Not enough quantity for {product.name}. Requested: {quantity}, Available: {product.get_quantity()}")
+                raise Exception(
+                    f"Not enough quantity for {product.name}. "
+                    f"Requested: {quantity}, Available: {product.get_quantity()}"
+                )
+            # Add the cost of the purchased quantity to the total
             total_price += product.buy(quantity)
         return total_price
