@@ -30,11 +30,9 @@ def make_order(store: Store):
 
     Raises:
         ValueError: If input quantity is invalid.
-        Exception: For any stock or product availability issues.
     """
     shopping_list = []
     products = store.get_all_products()
-
 
     print("------")
     for i, product in enumerate(products, start=1):
@@ -59,16 +57,18 @@ def make_order(store: Store):
             shopping_list.append((product, quantity))
             print("Product added to list!")
 
-        except (ValueError, IndexError):
+        except ValueError:
             print("Invalid input. Please enter a valid product number and quantity.")
-        except Exception as error_message:
-            print(f"Error: {error_message}")
+        except IndexError:
+            print("Invalid product number. Please select a number from the list.")
 
     try:
         total_cost = store.order(shopping_list)
         print(f"********\nOrder made! Total payment: ${total_cost}\n********")
-    except Exception as error_message:
-        print(f"Error in processing order: {error_message}")
+    except ValueError as error:
+        print(f"Error in processing order: {error}")
+    except LookupError as error:  # Handling stock-related issues, if applicable
+        print(f"Insufficient stock for one of the products: {error}")
 
 
 def start(store: Store):
