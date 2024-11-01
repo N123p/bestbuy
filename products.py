@@ -85,7 +85,6 @@ class Product:
         self.set_quantity(self.quantity - quantity)
         return total_price
 
-
 # Testing code (commented out to avoid unused variable warning)
 # def main():
 #     bose = Product("Bose QuietComfort Earbuds", price=250, quantity=500)
