@@ -1,7 +1,7 @@
 from products import Product
 from store import Store
 
-# Setup initial stock of inventory
+
 product_list = [
     Product("MacBook Air M2", price=1450, quantity=100),
     Product("Bose QuietComfort Earbuds", price=250, quantity=500),
