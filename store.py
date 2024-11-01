@@ -2,7 +2,7 @@ from typing import List, Tuple
 from products import Product
 
 class Store:
-    """A Store that manages a list of products and facilitates adding, removing, and purchasing products."""
+    """A Store that manages a list of products with some options"""
 
     def __init__(self, products: List[Product]):
         """Initialize the Store with a list of Product instances."""
