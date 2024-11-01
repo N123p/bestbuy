@@ -1,7 +1,6 @@
 from products import Product
 from store import Store
 
-
 product_list = [
     Product("MacBook Air M2", price=1450, quantity=100),
     Product("Bose QuietComfort Earbuds", price=250, quantity=500),
@@ -36,7 +35,7 @@ def make_order(store: Store):
     shopping_list = []
     products = store.get_all_products()
 
-    # Display products for selection
+
     print("------")
     for i, product in enumerate(products, start=1):
         print(f"{i}. {product.show()}")
@@ -65,7 +64,6 @@ def make_order(store: Store):
         except Exception as error_message:
             print(f"Error: {error_message}")
 
-    # Process the order
     try:
         total_cost = store.order(shopping_list)
         print(f"********\nOrder made! Total payment: ${total_cost}\n********")
