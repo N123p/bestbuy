@@ -7,79 +7,103 @@ product_list = [
     Product("Bose QuietComfort Earbuds", price=250, quantity=500),
     Product("Google Pixel 7", price=500, quantity=250)
 ]
+
 best_buy = Store(product_list)
 
-def display_menu():
-    print("\n   Store Menu")
-    print("   ----------")
-    print("1. List all products in store")
-    print("2. Show total amount in store")
-    print("3. Make an order")
-    print("4. Quit")
 
-def list_products(store):
-    print("------")
+def list_all_products(store: Store):
+    """Displays all products currently available in the store."""
     products = store.get_all_products()
+    print("------")
     for i, product in enumerate(products, start=1):
         print(f"{i}. {product.show()}")
     print("------")
 
-def show_total_amount(store):
+
+def show_total_amount(store: Store):
+    """Displays the total quantity of all items in the store."""
     total_quantity = store.get_total_quantity()
     print(f"Total of {total_quantity} items in store")
 
-def make_order(store):
-    order_list = []
+
+def make_order(store: Store):
+    """Handles creating an order by prompting user input for product and quantity.
+
+    Raises:
+        ValueError: If input quantity is invalid.
+        Exception: For any stock or product availability issues.
+    """
+    shopping_list = []
+    products = store.get_all_products()
+
+    # Display products for selection
+    print("------")
+    for i, product in enumerate(products, start=1):
+        print(f"{i}. {product.show()}")
+    print("------")
+    print("When you want to finish the order, enter empty text.")
+
     while True:
-        list_products(store)
-        product_choice = input("Which product # do you want? ")
-        if product_choice == "":
-            break
         try:
-            product_choice = int(product_choice) - 1
-            product = store.get_all_products()[product_choice]
-        except (IndexError, ValueError):
-            print("Invalid choice. Please select a valid product number.")
-            continue
+            product_input = input("Which product # do you want? ")
+            if not product_input:
+                break
 
-        amount = input("What amount do you want? ")
-        if amount == "":
-            break
-        try:
-            amount = int(amount)
-            if amount <= 0:
-                print("Please enter a positive amount.")
-                continue
-        except ValueError:
-            print("Invalid amount. Please enter a number.")
-            continue
+            product_index = int(product_input) - 1
+            product = products[product_index]
 
-        order_list.append((product, amount))
-        print("Product added to list!")
+            quantity_input = input("What amount do you want? ")
+            if not quantity_input:
+                break
 
-    if order_list:
-        try:
-            total_price = store.order(order_list)
-            print("********")
-            print(f"Order made! Total payment: ${total_price}")
-        except Exception as e:
-            print(f"Error: {e}")
+            quantity = int(quantity_input)
+            shopping_list.append((product, quantity))
+            print("Product added to list!")
 
-def start(store):
+        except (ValueError, IndexError):
+            print("Invalid input. Please enter a valid product number and quantity.")
+        except Exception as error_message:
+            print(f"Error: {error_message}")
+
+    # Process the order
+    try:
+        total_cost = store.order(shopping_list)
+        print(f"********\nOrder made! Total payment: ${total_cost}\n********")
+    except Exception as error_message:
+        print(f"Error in processing order: {error_message}")
+
+
+def start(store: Store):
+    """Starts the user interface to interact with the store."""
     while True:
-        display_menu()
+        print("""
+   Store Menu
+   ----------
+1. List all products in store
+2. Show total amount in store
+3. Make an order
+4. Quit
+""")
         choice = input("Please choose a number: ")
-        if choice == "1":
-            list_products(store)
-        elif choice == "2":
+
+        if choice == '1':
+            list_all_products(store)
+        elif choice == '2':
             show_total_amount(store)
-        elif choice == "3":
+        elif choice == '3':
             make_order(store)
-        elif choice == "4":
-            print("Thank you Goodbye!")
+        elif choice == '4':
+            print("Thank you for visiting!")
             break
         else:
-            print("Invalid choice. Please select a valid option.")
+            print("Invalid choice. Please enter a number between 1 and 4.")
+
+
+# Main function to start the store interaction
+def main():
+    """Main function to initialize the store and start the user interface."""
+    start(best_buy)
+
 
 if __name__ == "__main__":
-    start(best_buy)
+    main()
