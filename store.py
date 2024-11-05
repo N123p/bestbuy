@@ -2,7 +2,7 @@ from typing import List, Tuple
 from products import Product
 
 class Store:
-    """A Store that manages a list of products with some options"""
+    """A Store that manages a list of products with various operations"""
 
     def __init__(self, products: List[Product]):
         """Initialize the Store with a list of Product instances."""
@@ -30,24 +30,35 @@ class Store:
         Places an order for multiple products and returns the total cost.
 
         Args:
-            shopping_list (List[Tuple[Product, int]]): A list of tuples with each tuple containing
+            shopping_list (List[Tuple[Product, int]]): A list of tuples, each containing
             a Product instance and the quantity to purchase.
 
         Returns:
             float: The total price of the entire order.
 
         Raises:
-            Exception: If any requested quantity is more than the available stock of that product,
-            or if a product in the order is inactive.
+            ValueError: If any requested quantity is more than the available stock of that product,
+            or if a product in the order is inactive or not available in the store's inventory.
         """
         total_price = 0.0
+
         for product, quantity in shopping_list:
-            # Check if there's enough quantity
+            # Ensure the product is in the store's inventory
+            if product not in self.products:
+                raise ValueError(f"Product '{product.name}' is not available in the store.")
+
+            # Ensure the product is active before purchasing
+            if not product.is_active():
+                raise ValueError(f"Product '{product.name}' is inactive and cannot be purchased.")
+
+            # Check if the requested quantity is available
             if quantity > product.get_quantity():
-                raise Exception(
-                    f"Not enough quantity for {product.name}. "
+                raise ValueError(
+                    f"Not enough quantity for '{product.name}'. "
                     f"Requested: {quantity}, Available: {product.get_quantity()}"
                 )
-            # Add the cost of the purchased quantity to the total
-            total_price += product.buy(quantity)
+
+            # Calculate cost for this product and add to total
+            total_price += product.buy(quantity)  # Assuming 'buy' method updates the quantity
+
         return total_price
